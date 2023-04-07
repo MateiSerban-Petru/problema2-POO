@@ -1,0 +1,612 @@
+#include <iostream>
+#include <string.h>
+ 
+using namespace std;
+ 
+class Data
+{
+    int zi;
+    char *luna;
+    int an;
+ 
+public:
+    // Constructor
+ 
+    Data(int zi = 0, char *luna = NULL, int an = 0)
+    {
+        this->zi = zi;
+        this->luna = luna;
+        this->an = an;
+    }
+ 
+    // Constructor de copiere
+ 
+    Data(const Data &d)
+    {
+        this->zi = d.zi;
+        this->luna = d.luna;
+        this->an = d.an;
+    }
+ 
+    // Destructor
+ 
+    // ~Data()
+    // {
+    //     delete[] luna;
+    // }
+ 
+    // Operator =
+ 
+    Data &operator=(const Data &d)
+    {
+        if (this != &d)
+        {
+            this->zi = d.zi;
+            this->luna = d.luna;
+            this->an = d.an;
+        }
+        return *this;
+    }
+ 
+    // Operator <<
+ 
+    friend ostream &operator<<(ostream &out, const Data &d)
+    {
+        out << "Data: " << d.zi << " " << d.luna << " " << d.an << endl;
+        return out;
+    }
+ 
+    // Operator >>
+ 
+    friend istream &operator>>(istream &in, Data &d)
+    {
+        cout << "Ziua: ";
+        in >> d.zi;
+ 
+        cout << "Luna: ";
+ 
+        char buffer[100];
+        in >> buffer;
+        d.luna = new char[strlen(buffer) + 1];
+        strcpy(d.luna, buffer);
+ 
+        cout << "Anul: ";
+        in >> d.an;
+ 
+        return in;
+    }
+ 
+    // Getteri
+ 
+    int getZi()
+    {
+        return zi;
+    }
+ 
+    char *getLuna()
+    {
+        return luna;
+    }
+ 
+    int getAn()
+    {
+        return an;
+    }
+ 
+    // Setteri
+ 
+    void setZi(int zi)
+    {
+        this->zi = zi;
+    }
+ 
+    void setLuna(char *luna)
+    {
+        this->luna = luna;
+    }
+ 
+    void setAn(int an)
+    {
+        this->an = an;
+    }
+};
+ 
+class Angajat
+{
+protected:
+    string nume;
+    string prenume;
+    float salariu;
+    Data data_angajare;
+    static float prima;
+ 
+public:
+    // Constructor
+ 
+    Angajat(string nume, string prenume, float salariu, Data data_angajare) : nume(nume), prenume(prenume), salariu(salariu), data_angajare(data_angajare)
+    {
+    }
+ 
+    // Constructor de copiere
+ 
+    Angajat(const Angajat &a)
+    {
+        this->nume = a.nume;
+        this->prenume = a.prenume;
+        this->salariu = a.salariu;
+        this->data_angajare = a.data_angajare;
+    }
+ 
+    // Destructor
+ 
+    virtual ~Angajat()
+    {
+    }
+ 
+    // Operator =
+ 
+    Angajat &operator=(const Angajat &a)
+    {
+        if (this != &a)
+        {
+            this->nume = a.nume;
+            this->prenume = a.prenume;
+            this->salariu = a.salariu;
+            this->data_angajare = a.data_angajare;
+        }
+        return *this;
+    }
+ 
+    // Operator <<
+ 
+    friend ostream &operator<<(ostream &out, const Angajat &a)
+    {
+        out << a.nume << " " << a.prenume << " " << a.salariu << " " << a.data_angajare;
+        return out;
+    }
+ 
+    // Operator >>
+ 
+    friend istream &operator>>(istream &in, Angajat &a)
+    {
+        in >> a.nume >> a.prenume >> a.salariu >> a.data_angajare;
+        return in;
+    }
+ 
+    // Getteri
+ 
+    string getNume()
+    {
+        return nume;
+    }
+ 
+    string getPrenume()
+    {
+        return prenume;
+    }
+ 
+    float getSalariu()
+    {
+        return salariu;
+    }
+ 
+    Data getDataAngajare()
+    {
+        return data_angajare;
+    }
+ 
+    // Setteri
+ 
+    void setNume(string nume)
+    {
+        this->nume = nume;
+    }
+ 
+    void setPrenume(string prenume)
+    {
+        this->prenume = prenume;
+    }
+ 
+    void setSalariu(float salariu)
+    {
+        this->salariu = salariu;
+    }
+ 
+    void setDataAngajare(Data data_angajare)
+    {
+        this->data_angajare = data_angajare;
+    }
+ 
+    // Metode
+ 
+    virtual void afisare()
+    {
+        cout << "Nume: " << nume << endl;
+        cout << "Prenume: " << prenume << endl;
+        cout << "Salariu: " << salariu << endl;
+        cout << "Data angajare: " << data_angajare << endl;
+    }
+ 
+    virtual void citire()
+    {
+        cout << "Nume: ";
+        cin >> nume;
+        cout << "Prenume: ";
+        cin >> prenume;
+        cout << "Salariu: ";
+        cin >> salariu;
+        cout << "Data angajare: ";
+        cin >> data_angajare;
+    }
+ 
+    // Functie care calculeaza suma primita de sarbatori
+ 
+    virtual float calculeazaSumaSarbatori()
+    {
+        return 0;
+    };
+ 
+    // Static function
+ 
+    static void afisarePrima()
+    {
+        cout << "Prima: " << prima << endl;
+    }
+ 
+    // Static function
+ 
+    static void setPrima(int prima)
+    {
+        Angajat::prima = prima;
+    }
+};
+ 
+class Part_Time : public Angajat
+{
+    int nr_ore_zi;
+    Data final_contract;
+ 
+public:
+    // Constructor
+    
+    Part_Time(string nume, string prenume, float salariu, Data data_angajare, int nr_ore_zi, Data final_contract) : Angajat(nume, prenume, salariu, data_angajare), nr_ore_zi(nr_ore_zi), final_contract(final_contract)
+    {
+    }
+ 
+    // Constructor de copiere
+ 
+    Part_Time(const Part_Time &p) : Angajat(p)
+    {
+        this->nr_ore_zi = p.nr_ore_zi;
+        this->final_contract = p.final_contract;
+    }
+ 
+    // Destructor
+ 
+    ~Part_Time()
+    {
+    }
+ 
+    // Operator =
+ 
+    Part_Time &operator=(const Part_Time &p)
+    {
+        if (this != &p)
+        {
+            this->nume = p.nume;
+            this->prenume = p.prenume;
+            this->salariu = p.salariu;
+            this->data_angajare = p.data_angajare;
+            this->nr_ore_zi = p.nr_ore_zi;
+            this->final_contract = p.final_contract;
+        }
+        return *this;
+    }
+ 
+    // Operator <<
+ 
+    friend ostream &operator<<(ostream &out, const Part_Time &p)
+    {
+        out << p.nume << " " << p.prenume << " " << p.salariu << " " << p.data_angajare << " " << p.nr_ore_zi << " " << p.final_contract;
+        return out;
+    }
+ 
+    // Operator >>
+ 
+    friend istream &operator>>(istream &in, Part_Time &p)
+    {
+        in >> p.nume >> p.prenume >> p.salariu >> p.data_angajare >> p.nr_ore_zi >> p.final_contract;
+        return in;
+    }
+ 
+    // Getteri
+ 
+    int getNrOreZi()
+    {
+        return nr_ore_zi;
+    }
+ 
+    Data getFinalContract()
+    {
+        return final_contract;
+    }
+ 
+    // Setteri
+ 
+    void setNrOreZi(int nr_ore_zi)
+    {
+        this->nr_ore_zi = nr_ore_zi;
+    }
+ 
+    void setFinalContract(Data final_contract)
+    {
+        this->final_contract = final_contract;
+    }
+ 
+    // Metode
+ 
+    void afisare()
+    {
+        cout << "Nume: " << nume << endl;
+        cout << "Prenume: " << prenume << endl;
+        cout << "Salariu: " << salariu << endl;
+        cout << "Data angajare: " << data_angajare << endl;
+        cout << "Numar ore zi: " << nr_ore_zi << endl;
+        cout << "Final contract: " << final_contract << endl;
+    }
+ 
+    void citire()
+    {
+        cout << "Nume: ";
+        cin >> nume;
+        cout << "Prenume: ";
+        cin >> prenume;
+        cout << "Salariu: ";
+        cin >> salariu;
+        cout << "Data angajare: ";
+        cin >> data_angajare;
+        cout << "Numar ore zi: ";
+        cin >> nr_ore_zi;
+        cout << "Final contract: ";
+        cin >> final_contract;
+    }
+ 
+    // Functie care verifica daca contractul se termina in luna curenta(decembrie)
+    bool contractulSeTerminaInLunaCurenta()
+    {
+        int an_final = final_contract.getAn();
+        char *luna_final = final_contract.getLuna();
+ 
+        if (an_final == 2022 && strcmp(luna_final, "Decembrie") == 0)
+        {
+            return true;
+        }
+ 
+        return false;
+    }
+ 
+    float calculeazaSumaSarbatori()
+    {
+        if (!contractulSeTerminaInLunaCurenta())
+        {
+            return prima;
+        }
+        return 0.75 * prima;
+    }
+};
+ 
+class Permanent : public Angajat
+{
+    int nr_minori_intretinere;
+ 
+public:
+    // Constructor
+    Permanent(string nume, string prenume, float salariu, Data data_angajare, int nr_minori_intretinere) : Angajat(nume, prenume, salariu, data_angajare), nr_minori_intretinere(nr_minori_intretinere)
+    {
+    }
+ 
+    // Constructor de copiere
+ 
+    Permanent(const Permanent &p) : Angajat(p)
+    {
+        this->nr_minori_intretinere = p.nr_minori_intretinere;
+    }
+ 
+    // Destructor
+ 
+    ~Permanent()
+    {
+    }
+ 
+    // Operator =
+ 
+    Permanent &operator=(const Permanent &p)
+    {
+        if (this != &p)
+        {
+            this->nume = p.nume;
+            this->prenume = p.prenume;
+            this->salariu = p.salariu;
+            this->data_angajare = p.data_angajare;
+            this->nr_minori_intretinere = p.nr_minori_intretinere;
+        }
+        return *this;
+    }
+ 
+    // Operator <<
+ 
+    friend ostream &operator<<(ostream &out, const Permanent &p)
+    {
+        out << p.nume << " " << p.prenume << " " << p.salariu << " " << p.data_angajare << " " << p.nr_minori_intretinere;
+        return out;
+    }
+ 
+    // Operator >>
+ 
+    friend istream &operator>>(istream &in, Permanent &p)
+    {
+        in >> p.nume >> p.prenume >> p.salariu >> p.data_angajare >> p.nr_minori_intretinere;
+        return in;
+    }
+ 
+    // Getteri
+ 
+    int getNrMinoriIntretinere()
+    {
+        return nr_minori_intretinere;
+    }
+ 
+    // Setteri
+ 
+    void setNrMinoriIntretinere(int nr_minori_intretinere)
+    {
+        this->nr_minori_intretinere = nr_minori_intretinere;
+    }
+ 
+    // Metode
+ 
+    void afisare()
+    {
+        cout << "Nume: " << nume << endl;
+        cout << "Prenume: " << prenume << endl;
+        cout << "Salariu: " << salariu << endl;
+        cout << "Data angajare: " << data_angajare << endl;
+        cout << "Numar minori intretinere: " << nr_minori_intretinere << endl;
+    }
+ 
+    void citire()
+    {
+        cout << "Nume: ";
+        cin >> nume;
+        cout << "Prenume: ";
+        cin >> prenume;
+        cout << "Salariu: ";
+        cin >> salariu;
+        cout << "Data angajare: ";
+        cin >> data_angajare;
+        cout << "Numar minori intretinere: ";
+        cin >> nr_minori_intretinere;
+    }
+ 
+    // Functie care calculeaza vechimea angajatului
+    int vechime()
+    {   
+        return (2020 - data_angajare.getAn());
+    }
+ 
+    float calculeazaSumaSarbatori()
+    {
+        int vechimeAngajat = vechime();
+        float procent = vechimeAngajat / 100.0;
+ 
+        return prima + (prima * procent);
+    }
+};
+ 
+float Angajat::prima = 1000;
+ 
+int main()
+{
+    // Citirea a n obiecte de tipuri diferite, memorarea si afisarea acestora
+ 
+    int n;
+ 
+    cout << "Numar angajati: ";
+ 
+    cin >> n;
+ 
+    Angajat **angajati = new Angajat *[n];
+ 
+    for (int i = 0; i < n; i++)
+    {
+        int tip;
+ 
+        cout << "1. Part Time" << endl;
+        cout << "2. Permanent" << endl;
+        cout << "Tip angajat: ";
+ 
+        cin >> tip;
+ 
+        if (tip == 1)
+        {
+            string nume, prenume;
+            float salariu;
+            Data data_angajare;
+            int nr_ore_zi;
+            Data final_contract;
+ 
+            cout << "Nume: ";
+            cin >> nume;
+            cout << "Prenume: ";
+            cin >> prenume;
+            cout << "Salariu: ";
+            cin >> salariu;
+            cout << "Data angajare: \n";
+            cin >> data_angajare;
+            cout << "Numar ore zi: ";
+            cin >> nr_ore_zi;
+            cout << "Final contract: \n";
+            cin >> final_contract;
+ 
+            angajati[i] = new Part_Time(nume, prenume, salariu, data_angajare, nr_ore_zi, final_contract);
+        }
+        else
+        {
+            string nume, prenume;
+            float salariu;
+            Data data_angajare;
+            int nr_minori_intretinere;
+ 
+            cout << "Nume: ";
+            cin >> nume;
+            cout << "Prenume: ";
+            cin >> prenume;
+            cout << "Salariu: ";
+            cin >> salariu;
+            cout << "Data angajare: \n";
+            cin >> data_angajare;
+            cout << "Numar minori intretinere: ";
+            cin >> nr_minori_intretinere;
+ 
+            angajati[i] = new Permanent(nume, prenume, salariu, data_angajare, nr_minori_intretinere);
+        }
+    }
+ 
+    cout << "Angajatii sunt: " << endl;
+ 
+    for (int i = 0; i < n; i++)
+    {
+        angajati[i]->afisare();
+    }
+ 
+ 
+    // Afisare sume primite de sarbatori
+ 
+    cout << "Suma primita de angajatii de tip Part Time la sarbatori este: " << endl;
+ 
+    for (int i = 0; i < n; i++)
+    {
+        Part_Time *p = dynamic_cast<Part_Time *>(angajati[i]);
+ 
+        if (p != NULL)
+        {
+            cout << p->calculeazaSumaSarbatori() << endl;
+        }
+    }
+ 
+    cout << "Suma primita de angajatii de tip Permanent la sarbatori este: " << endl;
+ 
+    for (int i = 0; i < n; i++)
+    {
+        Permanent *p = dynamic_cast<Permanent *>(angajati[i]);
+ 
+        if (p != NULL)
+        {
+            cout << p->calculeazaSumaSarbatori() << endl;
+        }
+    }
+ 
+ 
+    return 0;
+ 
+}
